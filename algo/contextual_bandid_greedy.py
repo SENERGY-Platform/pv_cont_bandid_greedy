@@ -10,9 +10,9 @@ def update_design_matrix(design_matrix, new_weather_input, weather_dim):
 def update_reward_vector(reward_vector, new_reward):
     return reward_vector
 
-def update_actions(actions, design_matrix):
+def update_actions(actions, betas, design_matrix):
     estimated_beta = ols_estimator()
     return actions
 
-def update_betas(betas, actions, design_matrix):
+def update_betas(actions, betas, design_matrix):
     return betas

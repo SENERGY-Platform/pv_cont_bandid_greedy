@@ -59,7 +59,7 @@ class Operator(util.OperatorBase):
 
         self.design_matrix = None
 
-        self.betas = [0,0]
+        self.betas = [np.zeros(self.weather_dim),np.zeros(self.weather_dim)]
 
         self.actions = []
 
@@ -70,7 +70,7 @@ class Operator(util.OperatorBase):
         new_weather_array = aux_functions.preprocess_weather_data(new_weather_data)
         new_weather_input = np.mean(new_weather_array, axis=0)
 
-        self.actions = contextual_bandid_greedy.update_actions(self.actions, new_weather_input)
+        self.actions = contextual_bandid_greedy.update_actions(self.actions, self.betas, new_weather_input)
 
         self.agents.append(agent.Agent())
         newest_agent = self.agents[-1]
@@ -119,7 +119,7 @@ class Operator(util.OperatorBase):
                 self.agents_data.append(old_agent)
                 self.power_lists.append(old_agent.power_list)
                 self.rewards.append(old_agent.reward)
-                self.betas = contextual_bandid_greedy.update_betas(self.betas, self.actions, self.design_matrix)
+                self.betas = contextual_bandid_greedy.update_betas(self.actions, self.betas, self.design_matrix)
 
         with open(self.power_lists_file, 'wb') as f:
             pickle.dump(self.power_lists, f)
