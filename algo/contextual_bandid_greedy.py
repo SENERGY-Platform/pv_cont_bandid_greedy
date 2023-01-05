@@ -1,3 +1,5 @@
+import numpy as np
+
 def update_design_matrix(design_matrix, new_weather_input, weather_dim):
     if design_matrix == None:
         design_matrix = new_weather_input.reshape((1,weather_dim))
