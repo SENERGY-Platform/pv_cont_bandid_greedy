@@ -17,7 +17,7 @@
 __all__ = ("Operator", )
 
 import util
-from . import aux_functions, Agent
+from . import aux_functions, agent, contextual_bandid_greedy
 import pickle
 import pandas as pd
 import numpy as np
@@ -70,15 +70,15 @@ class Operator(util.OperatorBase):
         new_weather_array = aux_functions.preprocess_weather_data(new_weather_data)
         new_weather_input = np.mean(new_weather_array, axis=0)
 
-        self.actions = aux_functions.update_actions(self.actions, new_weather_input)
+        self.actions = contextual_bandid_greedy.update_actions(self.actions, new_weather_input)
 
-        self.agents.append(Agent.Agent())
+        self.agents.append(agent.Agent())
         newest_agent = self.agents[-1]
         newest_agent.save_weather_data(new_weather_input)
         newest_agent.initial_time = pd.to_datetime(new_weather_data[0]['weather_time']).tz_localize(None)
         newest_agent.action = self.actions[-1]
 
-        self.design_matrix = aux_functions.update_design_matrix(self.design_matrix, new_weather_input, self.weather_dim)
+        self.design_matrix = contextual_bandid_greedy.update_design_matrix(self.design_matrix, new_weather_input, self.weather_dim)
     
         if newest_agent.action==0:
             return {"value": 0}
@@ -119,7 +119,7 @@ class Operator(util.OperatorBase):
                 self.agents_data.append(old_agent)
                 self.power_lists.append(old_agent.power_list)
                 self.rewards.append(old_agent.reward)
-                self.betas = aux_functions.update_betas(self.betas, self.actions, self.design_matrix)
+                self.betas = contextual_bandid_greedy.update_betas(self.betas, self.actions, self.design_matrix)
 
         with open(self.power_lists_file, 'wb') as f:
             pickle.dump(self.power_lists, f)
