@@ -57,7 +57,7 @@ class Operator(util.OperatorBase):
         self.agents_data_file = f'{data_path}/agents_data_{self.power_history_start_stop}.pickle'
         self.power_forecast_plot_file = f'{data_path}/histogram_{self.power_history_start_stop}.png'
 
-        self.design_matrix = None
+        self.design_matrix_0, self.design_matrix_1 = None, None
 
         self.betas = [np.zeros(self.weather_dim),np.zeros(self.weather_dim)]
 
@@ -78,7 +78,8 @@ class Operator(util.OperatorBase):
         newest_agent.initial_time = pd.to_datetime(new_weather_data[0]['weather_time']).tz_localize(None)
         newest_agent.action = self.actions[-1]
 
-        self.design_matrix = contextual_bandid_greedy.update_design_matrix(self.design_matrix, new_weather_input, self.weather_dim)
+        self.design_matrix_0,  self.design_matrix_1= contextual_bandid_greedy.update_design_matrices(self.design_matrix_0, self.design_matrix_1,
+                                                                                                             new_weather_input, self.actions[-1])
     
         if newest_agent.action==0:
             return {"value": 0}

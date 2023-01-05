@@ -1,11 +1,17 @@
 import numpy as np
 
-def update_design_matrix(design_matrix, new_weather_input, weather_dim):
-    if design_matrix == None:
-        design_matrix = new_weather_input.reshape((1,weather_dim))
-    else:
-        design_matrix = np.vstack((design_matrix, new_weather_input))
-    return design_matrix
+def update_design_matrices(design_matrix_0, design_matrix_1, new_weather_input, action):
+    if action==0:
+        if design_matrix_0 == None:
+            design_matrix_0 = new_weather_input.reshape((1,-1))
+        else:
+            design_matrix_0 = np.vstack((design_matrix_0, new_weather_input))
+    elif action==1:
+        if design_matrix_1 == None:
+            design_matrix_1 = new_weather_input.reshape((1,-1))
+        else:
+            design_matrix_1 = np.vstack((design_matrix_1, new_weather_input))
+    return design_matrix_0, design_matrix_1
 
 def update_reward_vector(reward_vector, new_reward):
     return reward_vector
