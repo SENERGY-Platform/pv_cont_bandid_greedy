@@ -10,8 +10,11 @@ def update_design_matrix(design_matrix, new_weather_input, weather_dim):
 def update_reward_vector(reward_vector, new_reward):
     return reward_vector
 
-def update_actions(actions, betas, design_matrix):
-    estimated_beta = ols_estimator()
+def update_actions(actions, betas, new_weather_input):
+    estimated_reward_0 = np.dot(new_weather_input, betas[0])
+    estimated_reward_1 = np.dot(new_weather_input, betas[1])
+    action = np.argmax([estimated_reward_0, estimated_reward_1])
+    actions.append(action)
     return actions
 
 def update_betas(actions, betas, design_matrix):
