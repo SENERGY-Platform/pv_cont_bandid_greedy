@@ -35,7 +35,6 @@ class Config(simple_struct.Structure):
     weather_dim = 6
     data_path = "/opt/data"
     selectors: typing.List[Selector] = None
-    buffer_len: str = None
     power_history_start_stop: str = None
     lat = 51.34
     long = 12.38

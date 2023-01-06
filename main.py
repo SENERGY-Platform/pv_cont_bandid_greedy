@@ -51,7 +51,6 @@ if __name__ == '__main__':
     kafka_producer = confluent_kafka.Producer(kafka_producer_config, logger=util.logger)
     operator = algo.Operator(
         power_history_start_stop=opr_config.config.power_history_start_stop,
-        buffer_len=opr_config.config.buffer_len,
         weather_dim=opr_config.config.weather_dim,
         data_path=opr_config.config.data_path,
         lat = opr_config.config.lat,
