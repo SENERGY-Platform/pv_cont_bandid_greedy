@@ -1,3 +1,4 @@
+FROM amancevice/pandas:1.5.1-alpine
 LABEL org.opencontainers.image.source https://github.com/SENERGY-Platform/pv-greedy-operator
 WORKDIR /usr/src/app
 COPY . .
