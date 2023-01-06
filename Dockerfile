@@ -1,4 +1,4 @@
-FROM amancevice/pandas:1.5.1
+FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 LABEL org.opencontainers.image.source https://github.com/SENERGY-Platform/pv-greedy-operator
 WORKDIR /usr/src/app
 COPY . .
