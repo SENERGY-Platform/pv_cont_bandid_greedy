@@ -141,7 +141,23 @@ class Operator(util.OperatorBase):
             pickle.dump(self.agents_data, f)
 
     def create_power_forecast(self, new_weather_data):
-        
+        power_forecast = []
+        new_weather_array = aux_functions.preprocess_weather_data(new_weather_data)
+        new_weather_forecasted_for = [pd.to_datetime(datapoint['forecasted_for']).tz_localize(None) for datapoint in new_weather_data]
+        for i in range(0,len(new_weather_array),3):
+            new_weather_input = np.mean(new_weather_array[i:i+3], axis=0)
+            estimated_reward_0 = np.dot(new_weather_input, self.beta_0)
+            estimated_reward_1 = np.dot(new_weather_input, self.beta_1)
+            expected_action = np.argmax([estimated_reward_0, estimated_reward_1])
+            if expected_action==0:
+                expected_num = -1*estimated_reward_0
+            elif expected_action==1:
+                expected_num = estimated_reward_1
+            power_forecast.append((new_weather_forecasted_for[i],expected_num))
+        fig, ax = plt.subplots(1,1,figsize=(30,30))
+        ax.plot([timestamp for timestamp,_ in power_forecast],[num for _,num in power_forecast])
+        plt.savefig(self.power_forecast_plot_file)
+        self.policy.train()
         return 
         
     def run(self, data, selector):
