@@ -46,8 +46,6 @@ class Operator(util.OperatorBase):
         self.agents = []
 
         self.power_lists = []
-        self.actions = []
-        self.rewards = []
         self.agents_data = []
 
         self.power_lists_file = f'{data_path}/power_lists_{self.power_history_start_stop}.pickle'
@@ -57,12 +55,15 @@ class Operator(util.OperatorBase):
         self.agents_data_file = f'{data_path}/agents_data_{self.power_history_start_stop}.pickle'
         self.power_forecast_plot_file = f'{data_path}/histogram_{self.power_history_start_stop}.png'
 
-        self.design_matrix_0, self.design_matrix_1 = None, None
-
-        self.betas = [np.zeros(self.weather_dim),np.zeros(self.weather_dim)]
-
         self.actions = []
+        self.design_matrix_0, self.design_matrix_1 = None, None
+        self.rewards_0, self.rewards_1 = None, None
+        self.beta_0, self.beta_1 = np.zeros(self.weather_dim), np.zeros(self.weather_dim)
 
+        self.num_finished_agents_0 = 0
+        self.num_finished_agents_1 = 1
+
+       
         #if os.path.exists(self.model_file):
         #    self.policy.load_state_dict(torch.load(self.model_file))
 
@@ -70,7 +71,7 @@ class Operator(util.OperatorBase):
         new_weather_array = aux_functions.preprocess_weather_data(new_weather_data)
         new_weather_input = np.mean(new_weather_array, axis=0)
 
-        self.actions = contextual_bandid_greedy.update_actions(self.actions, self.betas, new_weather_input)
+        self.actions = contextual_bandid_greedy.update_actions(self.actions, self.beta_0, self.beta_1, new_weather_input)
 
         self.agents.append(agent.Agent())
         newest_agent = self.agents[-1]
@@ -79,7 +80,7 @@ class Operator(util.OperatorBase):
         newest_agent.action = self.actions[-1]
 
         self.design_matrix_0,  self.design_matrix_1= contextual_bandid_greedy.update_design_matrices(self.design_matrix_0, self.design_matrix_1,
-                                                                                                             new_weather_input, self.actions[-1])
+                                                                                                             new_weather_input, self.actions[-1])                                                       
     
         if newest_agent.action==0:
             return {"value": 0}
@@ -119,8 +120,16 @@ class Operator(util.OperatorBase):
                 old_agent.reward = old_agent.get_reward(old_agent.action, self.daylight_power_history)
                 self.agents_data.append(old_agent)
                 self.power_lists.append(old_agent.power_list)
-                self.rewards.append(old_agent.reward)
-                self.betas = contextual_bandid_greedy.update_betas(self.actions, self.betas, self.design_matrix)
+                if old_agent.action==0:
+                    self.rewards_0.append(old_agent.reward)
+                    self.num_finished_agents_0 += 1
+                elif old_agent.action==1:
+                    self.rewards_1.append(old_agent.reward)
+                    self.num_finished_agents_1 += 1
+                self.beta_0, self.beta_1 = contextual_bandid_greedy.update_betas(old_agent.action, self.beta_0, self.beta_1,
+                                                                                 self.num_finished_agents_0, self.num_finished_agents_1, 
+                                                                                 self.design_matrix_0, self.design_matrix_1,
+                                                                                 self.rewards_0, self.rewards_1)
 
         with open(self.power_lists_file, 'wb') as f:
             pickle.dump(self.power_lists, f)
