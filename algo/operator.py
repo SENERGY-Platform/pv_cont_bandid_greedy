@@ -161,7 +161,6 @@ class Operator(util.OperatorBase):
                 _ = self.run_new_weather(new_weather_data[0:3])
                 power_forecast = self.create_power_forecast(new_weather_data)
                 self.weather_same_timestamp = []
-                if len(self.replay_buffer)==self.buffer_len:
-                    return [{'timestamp':timestamp.strftime('%Y-%m-%d %X')+'Z', 'value': probability} for timestamp, probability in power_forecast]
+                return [{'timestamp':timestamp.strftime('%Y-%m-%d %X')+'Z', 'value': probability} for timestamp, probability in power_forecast]
         elif selector == 'power_func':
             self.run_new_power(data)
