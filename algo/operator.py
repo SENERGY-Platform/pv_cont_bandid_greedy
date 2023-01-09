@@ -45,12 +45,9 @@ class Operator(util.OperatorBase):
 
         self.agents = []
 
-        self.power_lists = []
         self.agents_data = []
 
-        self.power_lists_file = f'{data_path}/power_lists_{self.power_history_start_stop}.pickle'
         self.actions_file = f'{data_path}/actions_{self.power_history_start_stop}.pickle'
-        self.rewards_file = f'{data_path}/rewards_{self.power_history_start_stop}.pickle'
         self.weather_file = f'{data_path}/weather_{self.power_history_start_stop}.pickle'
         self.agents_data_file = f'{data_path}/agents_data_{self.power_history_start_stop}.pickle'
         self.power_forecast_plot_file = f'{data_path}/histogram_{self.power_history_start_stop}.png'
@@ -119,7 +116,6 @@ class Operator(util.OperatorBase):
             if old_agent.power_list != []:
                 old_agent.reward = old_agent.get_reward(old_agent.action, self.daylight_power_history)
                 self.agents_data.append(old_agent)
-                self.power_lists.append(old_agent.power_list)
                 if old_agent.action==0:
                     self.rewards_0.append(old_agent.reward)
                     self.num_finished_agents_0 += 1
@@ -130,13 +126,8 @@ class Operator(util.OperatorBase):
                                                                                  self.num_finished_agents_0, self.num_finished_agents_1, 
                                                                                  self.design_matrix_0, self.design_matrix_1,
                                                                                  self.rewards_0, self.rewards_1)
-
-        with open(self.power_lists_file, 'wb') as f:
-            pickle.dump(self.power_lists, f)
         with open(self.actions_file, 'wb') as f:
             pickle.dump(self.actions, f)
-        with open(self.rewards_file, 'wb') as f:
-            pickle.dump(self.rewards, f)
         with open(self.agents_data_file, 'wb') as f:
             pickle.dump(self.agents_data, f)
 
