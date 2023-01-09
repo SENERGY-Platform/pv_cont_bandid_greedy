@@ -114,7 +114,7 @@ class Operator(util.OperatorBase):
             del self.agents[index]
         for old_agent in old_agents:
             if old_agent.power_list != []:
-                old_agent.reward = old_agent.get_reward(old_agent.action, self.daylight_power_history)
+                old_agent.reward = old_agent.get_reward(old_agent.action, [power for _, power in self.daylight_power_history])
                 self.agents_data.append(old_agent)
                 if old_agent.action==0:
                     self.rewards_0.append(old_agent.reward)
