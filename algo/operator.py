@@ -148,7 +148,7 @@ class Operator(util.OperatorBase):
         fig, ax = plt.subplots(1,1,figsize=(30,30))
         ax.plot([timestamp for timestamp,_ in power_forecast],[num for _,num in power_forecast])
         plt.savefig(self.power_forecast_plot_file)
-        return 
+        return power_forecast
         
     def run(self, data, selector):
         print(selector + ": " + str(data))
