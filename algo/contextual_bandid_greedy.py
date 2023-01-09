@@ -3,12 +3,12 @@ from sklearn.linear_model import LinearRegression
 
 def update_design_matrices(design_matrix_0, design_matrix_1, new_weather_input, action):
     if action==0:
-        if design_matrix_0 == None:
+        if design_matrix_0.shape == (0,0):
             design_matrix_0 = new_weather_input.reshape((1,-1))
         else:
             design_matrix_0 = np.vstack((design_matrix_0, new_weather_input))
     elif action==1:
-        if design_matrix_1 == None:
+        if design_matrix_1.shape == (0,0):
             design_matrix_1 = new_weather_input.reshape((1,-1))
         else:
             design_matrix_1 = np.vstack((design_matrix_1, new_weather_input))

@@ -53,8 +53,8 @@ class Operator(util.OperatorBase):
         self.power_forecast_plot_file = f'{data_path}/histogram_{self.power_history_start_stop}.png'
 
         self.actions = []
-        self.design_matrix_0, self.design_matrix_1 = None, None
-        self.rewards_0, self.rewards_1 = None, None
+        self.design_matrix_0, self.design_matrix_1 = np.empty(shape=(0, 0)), np.empty(shape=(0, 0))
+        self.rewards_0, self.rewards_1 = [], []
         self.beta_0, self.beta_1 = np.zeros(self.weather_dim), np.zeros(self.weather_dim)
 
         self.num_finished_agents_0 = 0
