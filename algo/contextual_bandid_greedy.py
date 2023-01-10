@@ -31,12 +31,12 @@ def update_betas(action, beta_0, beta_1, num_finished_agents_0, num_finished_age
 
         regressor = LinearRegression()
         regressor.fit(design_matrix_0_tr, rewards_0_tr)
-        beta_0 = regressor.coef_
+        beta_0 = regressor.coef_.flatten()
     elif action==1 and num_finished_agents_1 > 0:
         rewards_1_tr = np.array(rewards_1[:num_finished_agents_1]).reshape((-1,1))
         design_matrix_1_tr = design_matrix_1[:num_finished_agents_1]
 
         regressor = LinearRegression()
         regressor.fit(design_matrix_1_tr, rewards_1_tr)
-        beta_1 = regressor.coef_
+        beta_1 = regressor.coef_.flatten()
     return beta_0, beta_1
