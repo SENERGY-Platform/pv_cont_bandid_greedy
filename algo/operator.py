@@ -58,7 +58,7 @@ class Operator(util.OperatorBase):
         self.beta_0, self.beta_1 = np.zeros(self.weather_dim), np.zeros(self.weather_dim)
 
         self.num_finished_agents_0 = 0
-        self.num_finished_agents_1 = 1
+        self.num_finished_agents_1 = 0
 
        
         #if os.path.exists(self.model_file):
