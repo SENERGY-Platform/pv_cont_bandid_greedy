@@ -14,7 +14,10 @@ class Agent:
     
     def get_reward(self, action, history):
         agents_power_mean = sum([power_value for _, power_value in self.power_list])/len([power_value for _, power_value in self.power_list])
-        history_mean = sum(history)/len(history)
+        if history==[]:
+            history_mean=agents_power_mean
+        else:
+            history_mean = sum(history)/len(history)
         
         if action==1:    # 'YES'
             reward = agents_power_mean-history_mean
