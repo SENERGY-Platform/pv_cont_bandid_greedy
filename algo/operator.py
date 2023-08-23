@@ -145,9 +145,8 @@ class Operator(util.OperatorBase):
             elif expected_action==1:
                 expected_num = estimated_reward_1
             power_forecast.append((new_weather_forecasted_for[i],expected_num))
-        fig, ax = plt.subplots(1,1,figsize=(30,30))
-        ax.plot([timestamp for timestamp,_ in power_forecast],[num for _,num in power_forecast])
-        plt.savefig(self.power_forecast_plot_file)
+        with open(self.power_forecast_plot_file, 'wb') as f:
+            pickle.dump(power_forecast, f)
         return power_forecast
         
     def run(self, data, selector):
